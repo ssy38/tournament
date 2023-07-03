@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from .forms import TournamentForm
-from rest_framework import viewsets
+from rest_framework import viewsets, status
+from rest_framework.response import Response
 from rest_framework.decorators import action
 from .serializers import *
 from rest_framework import permissions
@@ -52,19 +53,40 @@ class TournamentViewSet(viewsets.ModelViewSet):
     queryset = Tournament.objects.all()
 
     @action(detail=True, methods=['post'])
-    def generate_bracket(self, tournament):
+    def generate(self, request, pk=None):
         tournament = self.get_object()
         teams = tournament.teams.all()
         num_teams = teams.count()
-        num_rounds = num_teams / 2
+        num_rounds = num_teams // 2
 
         for i in range(num_rounds):
             Match.objects.create(
                 tournament = tournament,
                 order = i,
-                team1 = teams[i - 1],
-                team2 = teams[num_teams - i],
+                team1 = teams[i],
+                team2 = teams[num_teams - i - 1],
             )
+        return Response({'message': 'Bracket generated successfully'})
 
-    def update_bracket(self, tournament):
+    def update_bracket(self, request):
         pass
+
+class MatchViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows matches to be viewed or edited.
+    """
+    queryset = Match.objects.all()
+    serializer_class = MatchSerializer
+
+    # Update winner on patch call
+    def partial_update(self, request, *args, **kwargs):
+        match = self.get_object()
+        serializer = self.get_serializer(match, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+
+        # Check if the winner is either team1 or team2
+        winner = serializer.validated_data.get('winner')
+        if winner not in [match.team1, match.team2]:
+            return Response({"error": "Winner must be either team1 or team2"}, status=status.HTTP_400_BAD_REQUEST)
+        self.perform_update(serializer)
+        return Response(serializer.data)

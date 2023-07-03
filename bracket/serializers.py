@@ -4,10 +4,16 @@ from django.contrib.auth.models import User, Group
 
 
 
+
+class MatchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Match
+        fields = ["tournament", "order", "team1", "team2", "winner"]
+
 class TournamentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tournament
-        fields = ["name", "format", "startDate", "endDate"]
+        fields = "__all__"
 
 
 class UserSerializer(serializers.ModelSerializer):

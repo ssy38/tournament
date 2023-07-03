@@ -22,7 +22,7 @@ class Team(models.Model):
     tournaments = models.ManyToManyField(Tournament, related_name="teams")
 
 class Match(models.Model):
-    tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE)
+    tournament = models.ForeignKey(Tournament, related_name="matches", on_delete=models.CASCADE)
     order = models.IntegerField(default=1)
     team1 = models.ForeignKey(Team, related_name="team1Matches", on_delete=models.CASCADE)
     team2 = models.ForeignKey(Team, related_name="team2Matches", on_delete=models.CASCADE)
