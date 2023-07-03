@@ -62,6 +62,7 @@ class TournamentViewSet(viewsets.ModelViewSet):
         for i in range(num_rounds):
             Match.objects.create(
                 tournament = tournament,
+                round = 1,
                 order = i,
                 team1 = teams[i],
                 team2 = teams[num_teams - i - 1],
