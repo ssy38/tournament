@@ -8,7 +8,7 @@ from django.contrib.auth.models import User, Group
 class MatchSerializer(serializers.ModelSerializer):
     class Meta:
         model = Match
-        fields = ["tournament", "round", "order", "team1", "team2", "winner"]
+        fields = "__all__"
 
 class TournamentSerializer(serializers.ModelSerializer):
     matches = MatchSerializer(many=True, read_only=True)
@@ -20,7 +20,7 @@ class TournamentSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['url', 'username', 'email', 'groups']
+        fields = "__a;;__"
 
 
 class GroupSerializer(serializers.ModelSerializer):

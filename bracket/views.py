@@ -6,6 +6,7 @@ from rest_framework.decorators import action
 from .serializers import *
 from rest_framework import permissions
 from django.contrib.auth.models import User, Group
+from .utils import generate_bracket
 
 # Create your views here.
 
@@ -55,31 +56,10 @@ class TournamentViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'])
     def generate(self, request, pk=None):
         tournament = self.get_object()
-        teams = tournament.teams.all()
-        num_teams = teams.count()
-        if num_teams < 2:
-            return Response({'error': "Must have at least two teams in the tournament"})
-        num_rounds = num_teams // 2
-
-        # If zero matches, then generate initial matches
-        
-
-        if tournament.matches.all.count() == 0:
-            for i in range(num_rounds):
-                Match.objects.create(
-                    tournament = tournament,
-                    round = 1,
-                    order = i,
-                    team1 = teams[i],
-                    team2 = teams[num_teams - i - 1],
-                )
-            return Response({'message': 'Bracket generated successfully'})
-        # If more than one match, then generate new matches
-        matches = tournament.matches.all()
-
-
-    def update_bracket(self, request):
-        pass
+        print(getattr(tournament, "matches"))
+        num_teams = int(request.data.get('num'))
+        generate_bracket(num_teams, tournament)
+        return Response({'message': 'Bracket generated successfully'})
 
 class MatchViewSet(viewsets.ModelViewSet):
     """

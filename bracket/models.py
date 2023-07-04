@@ -18,17 +18,17 @@ class Tournament(models.Model):
 
 
 class Team(models.Model):
-    name = models.CharField(max_length=100)
-    seed = models.IntegerField()
-    tournaments = models.ManyToManyField(Tournament, related_name="teams")
+    name = models.CharField(max_length=100, null=True, blank=True)
+    seed = models.IntegerField(null=True, blank=True)
+    tournament = models.ForeignKey(Tournament, related_name="teams", on_delete=models.CASCADE, null=True, blank=True)
 
 class Match(models.Model):
     tournament = models.ForeignKey(Tournament, related_name="matches", on_delete=models.CASCADE)
+    round = models.SmallIntegerField(Tournament, null=True, blank=True)
     team1 = models.ForeignKey(Team, related_name="team1Matches", on_delete=models.SET_NULL, null=True, blank=True)
     team2 = models.ForeignKey(Team, related_name="team2Matches", on_delete=models.SET_NULL, null=True, blank=True)
     winner = models.ForeignKey(Team, related_name="winnerMatches", on_delete=models.SET_NULL, null=True, blank=True)
-    next = models.ForeignKey('self')
-    seed = models.ForeignKey('self')
+    next = models.ForeignKey('self', related_name="previousMatches", on_delete=models.SET_NULL, null=True, blank=True)
 
 
 class Player(models.Model):

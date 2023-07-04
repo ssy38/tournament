@@ -1,51 +1,48 @@
-# from .models import Match, Tournament
+from .models import Match, Tournament, Team
 from math import log2, floor
 
+def generate_bracket(n, tournament, *args, **kwargs):
+    '''Generates bracket for tournament of size n. *args shouold be empty in initial call.'''
 
-# n=1
-
-class match:
-    def __init__(self, team1, team2, round):
-        self.team1 = team1
-        self.team2 = team2
-        self.round = round
-
-matches = []
-
-def generate_bracket(n, *args, **kwargs):
-    # n = 8, higher_seed = 1, current_round = 3, num_rounds = 3
-    # if args is empty, then the function is being called for the first time.
-    # then, initialize args for recursion
+    # If args is empty, then the function is being called for the first time.
+    # Then, initialize args for recursion.
     if not args:
         num_rounds = floor(log2(n))
-        # args = [higher_seed, current round, total number of rounds]
-        args = [1, num_rounds, num_rounds]
+        higher_seed = 1
+        current_round = num_rounds
+        next_match = None
+        higher_team = Team.objects.create(seed=1, tournament=tournament)
+    else:
+        higher_seed = args[0]
+        current_round = args[1]
+        num_rounds = args[2]
+        next_match = kwargs.get("next_match")
+        higher_team = kwargs.get("higher_team")
 
-    higher_seed = args[0]
-    current_round = args[1]
-    num_rounds = args[2]
-
+    # Calculate lower seed in current match
     seed_sum = 2 ** (num_rounds - current_round + 1) + 1
-
     lower_seed = seed_sum - higher_seed
 
-    matches.append(match(higher_seed, lower_seed, current_round))
+    # Create lower seeded team
+    lower_team = Team.objects.create(seed=lower_seed, tournament=tournament)
     
-    # Base case
+    # Check if current match is a starting match
     if current_round == 1:
-        # Check if extra matches past 2^num_rounds are needed
         base_matches = 2 ** num_rounds
         extra_matches = n - base_matches
-        if lower_seed == 16:
-             pass
+        # If current match has a bye team, then create current match, then create extra match
         if extra_matches > 0 and lower_seed in range(base_matches - extra_matches + 1, base_matches + 1):
-                matches.append(match(lower_seed, 2 * n - lower_seed + 1, 0))
+            match = Match.objects.create(tournament=tournament, team1=higher_team, round=current_round, next=next_match)
+            extra_team = Team.objects.create(seed=2*n-lower_seed+1, tournament=tournament)
+            Match.objects.create(tournament=tournament, team1=lower_team, team2=extra_team, round=0, next=match)
+            return
+        # Otherwise, create current match with starting teams
+        match = Match.objects.create(tournament=tournament, team1=higher_team, team2=lower_team, round=current_round, next=next_match)
         return
+    
+    # If not starting match, then create placeholder match without teams in them
+    match = Match.objects.create(tournament=tournament, round=current_round, next=next_match)
 
     # Recursion
-    generate_bracket(n, higher_seed, current_round - 1, num_rounds)
-    generate_bracket(n, lower_seed, current_round - 1, num_rounds)
-
-
-generate_bracket(33+10)
-print(len(matches))
+    generate_bracket(n, tournament, higher_seed, current_round - 1, num_rounds, next_match=match, higher_team=higher_team)
+    generate_bracket(n, tournament, lower_seed, current_round - 1, num_rounds, next_match=match, higher_team=lower_team)
