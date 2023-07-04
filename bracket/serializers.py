@@ -11,6 +11,7 @@ class MatchSerializer(serializers.ModelSerializer):
         fields = ["tournament", "round", "order", "team1", "team2", "winner"]
 
 class TournamentSerializer(serializers.ModelSerializer):
+    matches = MatchSerializer(many=True, read_only=True)
     class Meta:
         model = Tournament
         fields = "__all__"

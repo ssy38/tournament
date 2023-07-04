@@ -57,17 +57,26 @@ class TournamentViewSet(viewsets.ModelViewSet):
         tournament = self.get_object()
         teams = tournament.teams.all()
         num_teams = teams.count()
+        if num_teams < 2:
+            return Response({'error': "Must have at least two teams in the tournament"})
         num_rounds = num_teams // 2
 
-        for i in range(num_rounds):
-            Match.objects.create(
-                tournament = tournament,
-                round = 1,
-                order = i,
-                team1 = teams[i],
-                team2 = teams[num_teams - i - 1],
-            )
-        return Response({'message': 'Bracket generated successfully'})
+        # If zero matches, then generate initial matches
+        
+
+        if tournament.matches.all.count() == 0:
+            for i in range(num_rounds):
+                Match.objects.create(
+                    tournament = tournament,
+                    round = 1,
+                    order = i,
+                    team1 = teams[i],
+                    team2 = teams[num_teams - i - 1],
+                )
+            return Response({'message': 'Bracket generated successfully'})
+        # If more than one match, then generate new matches
+        matches = tournament.matches.all()
+
 
     def update_bracket(self, request):
         pass
