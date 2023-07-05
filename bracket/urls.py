@@ -8,10 +8,10 @@ router.register(r'tournaments', views.TournamentViewSet, basename='tournament')
 router.register(r'users', views.UserViewSet)
 router.register(r'groups', views.GroupViewSet)
 router.register(r'matches', views.MatchViewSet, basename='match')
+router.register(r'teams', views.TeamViewSet)
 
 urlpatterns = [
-    path("", views.index, name="index"),
-    path("create/", views.create, name="create"),
-    path("tournament/<int:id>/", views.bracket, name="bracket"),
-    path("", include(router.urls))
+    path('', views.index, name="index"),
+    path(r'create/', views.create, name="create"),
+    path(r'api/', include(router.urls))
 ]

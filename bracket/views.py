@@ -6,7 +6,7 @@ from rest_framework.decorators import action
 from .serializers import *
 from rest_framework import permissions
 from django.contrib.auth.models import User, Group
-from .utils import generate_bracket
+from .utils import generate_bracket, populate_teams
 
 # Create your views here.
 
@@ -27,10 +27,6 @@ def create(request):
 def tournament(request):
     return render(request, "bracket/tournaments.html")
 
-def bracket(request, id):
-    pass
-
-
 class UserViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
@@ -49,6 +45,17 @@ class GroupViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
 
+class TeamViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows teams to be viewed or edited.
+    """
+    queryset = Team.objects.all()
+    serializer_class = TeamSerializer
+
+    #@action(detail=True, methods=['post'])
+
+
+
 class TournamentViewSet(viewsets.ModelViewSet):
     serializer_class = TournamentSerializer
     queryset = Tournament.objects.all()
@@ -56,10 +63,23 @@ class TournamentViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'])
     def generate(self, request, pk=None):
         tournament = self.get_object()
-        print(getattr(tournament, "matches"))
+        tournament.matches.all().delete()
+        tournament.teams.all().delete()
         num_teams = int(request.data.get('num'))
         generate_bracket(num_teams, tournament)
         return Response({'message': 'Bracket generated successfully'})
+    
+    @action(detail=True, methods=['post'], url_path="update-names", url_name="update-names")
+    def update_names(self, request, pk=None):
+        '''Update names of tournament teams given list of names'''
+        tournament = self.get_object()
+        names = request.data.get('names')
+        if len(names) > tournament.teams.count():
+            return Response({'error': 'Number of names must be less than number of teams'}, status=status.HTTP_400_BAD_REQUEST)
+        populate_teams(names, tournament)
+        tournament.matches.first().name = "asdf"
+        print(tournament.teams.first().name)
+        return Response({'message': 'Names updated successfully'})
 
 class MatchViewSet(viewsets.ModelViewSet):
     """
@@ -67,6 +87,7 @@ class MatchViewSet(viewsets.ModelViewSet):
     """
     queryset = Match.objects.all()
     serializer_class = MatchSerializer
+    http_method_names = ['get', 'patch']
 
     # Update winner on patch call
     def partial_update(self, request, *args, **kwargs):

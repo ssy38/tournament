@@ -2,7 +2,7 @@ from .models import Match, Tournament, Team
 from math import log2, floor
 
 def generate_bracket(n, tournament, *args, **kwargs):
-    '''Generates bracket for tournament of size n. *args shouold be empty in initial call.'''
+    '''Generates bracket for tournament of size n.'''
 
     # If args is empty, then the function is being called for the first time.
     # Then, initialize args for recursion.
@@ -46,3 +46,10 @@ def generate_bracket(n, tournament, *args, **kwargs):
     # Recursion
     generate_bracket(n, tournament, higher_seed, current_round - 1, num_rounds, next_match=match, higher_team=higher_team)
     generate_bracket(n, tournament, lower_seed, current_round - 1, num_rounds, next_match=match, higher_team=lower_team)
+
+def populate_teams(names, tournament):
+    '''Sets names of teams from lowest to highest seed given list of strings.'''
+    teams = tournament.teams.order_by('seed')
+    for team, name in zip(teams, names):
+        team.name = name
+        team.save()
