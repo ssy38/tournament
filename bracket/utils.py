@@ -12,12 +12,14 @@ def generate_bracket(n, tournament, *args, **kwargs):
         current_round = num_rounds
         next_match = None
         higher_team = Team.objects.create(seed=1, tournament=tournament)
+        next_team = None
     else:
         higher_seed = args[0]
         current_round = args[1]
         num_rounds = args[2]
-        next_match = kwargs.get("next_match")
-        higher_team = kwargs.get("higher_team")
+        next_match = args[3]
+        higher_team = args[4]
+        next_team = args[5]
 
     # Calculate lower seed in current match
     seed_sum = 2 ** (num_rounds - current_round + 1) + 1
@@ -41,11 +43,11 @@ def generate_bracket(n, tournament, *args, **kwargs):
         return
     
     # If not starting match, then create placeholder match without teams in them
-    match = Match.objects.create(tournament=tournament, round=current_round, next=next_match)
+    match = Match.objects.create(tournament=tournament, round=current_round, next=next_match, next_team=next_team)
 
     # Recursion
-    generate_bracket(n, tournament, higher_seed, current_round - 1, num_rounds, next_match=match, higher_team=higher_team)
-    generate_bracket(n, tournament, lower_seed, current_round - 1, num_rounds, next_match=match, higher_team=lower_team)
+    generate_bracket(n, tournament, higher_seed, current_round - 1, num_rounds, match, higher_team, "team1")
+    generate_bracket(n, tournament, lower_seed, current_round - 1, num_rounds, match, lower_team, "team2")
 
 def populate_teams(names, tournament):
     '''Sets names of teams from lowest to highest seed given list of strings.'''
@@ -53,3 +55,13 @@ def populate_teams(names, tournament):
     for team, name in zip(teams, names):
         team.name = name
         team.save()
+
+def advance_team(match):
+    '''Advance team after winner is decided. If final match then declare winner.'''
+    if match.winner:
+        next_match = match.next
+        if next_match is not None:
+            setattr(next_match, match.next_team, match.winner)
+        else:
+            match.winner.winner = match.tournament
+            match.winner.save()

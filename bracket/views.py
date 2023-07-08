@@ -6,7 +6,7 @@ from rest_framework.decorators import action
 from .serializers import *
 from rest_framework import permissions
 from django.contrib.auth.models import User, Group
-from .utils import generate_bracket, populate_teams
+from .utils import generate_bracket, populate_teams, advance_team
 
 # Create your views here.
 
@@ -52,9 +52,6 @@ class TeamViewSet(viewsets.ModelViewSet):
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
 
-    #@action(detail=True, methods=['post'])
-
-
 
 class TournamentViewSet(viewsets.ModelViewSet):
     serializer_class = TournamentSerializer
@@ -65,7 +62,7 @@ class TournamentViewSet(viewsets.ModelViewSet):
         tournament = self.get_object()
         tournament.matches.all().delete()
         tournament.teams.all().delete()
-        num_teams = int(request.data.get('num'))
+        num_teams = int(request.data.get('teams'))
         generate_bracket(num_teams, tournament)
         return Response({'message': 'Bracket generated successfully'})
     
@@ -77,9 +74,8 @@ class TournamentViewSet(viewsets.ModelViewSet):
         if len(names) > tournament.teams.count():
             return Response({'error': 'Number of names must be less than number of teams'}, status=status.HTTP_400_BAD_REQUEST)
         populate_teams(names, tournament)
-        tournament.matches.first().name = "asdf"
-        print(tournament.teams.first().name)
         return Response({'message': 'Names updated successfully'})
+
 
 class MatchViewSet(viewsets.ModelViewSet):
     """
@@ -100,4 +96,5 @@ class MatchViewSet(viewsets.ModelViewSet):
         if winner not in [match.team1, match.team2]:
             return Response({"error": "Winner must be either team1 or team2"}, status=status.HTTP_400_BAD_REQUEST)
         self.perform_update(serializer)
+        advance_team(match)
         return Response(serializer.data)

@@ -17,8 +17,19 @@ class TeamSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class TournamentSerializer(serializers.ModelSerializer):
+    winner = serializers.SerializerMethodField()
     matches = MatchSerializer(many=True, read_only=True)
     teams = TeamSerializer(many=True, read_only=True)
+
+    def get_winner(self, obj):
+        try:
+            winner = obj.winner
+        except:
+            return None
+        winner = obj.winner
+        if winner:
+            return TeamSerializer(winner).data
+
     class Meta:
         model = Tournament
         fields = "__all__"
