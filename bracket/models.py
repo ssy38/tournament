@@ -18,7 +18,7 @@ class Tournament(models.Model):
 
 
 class Team(models.Model):
-    name = models.CharField(max_length=100, null=True, blank=True)
+    name = models.CharField(max_length=100, default="")
     seed = models.IntegerField(null=True, blank=True)
     tournament = models.ForeignKey(Tournament, related_name="teams", on_delete=models.CASCADE, null=True, blank=True)
     winner = models.OneToOneField(Tournament, related_name="winner", on_delete=models.SET_NULL, null=True, blank=True)

@@ -71,8 +71,8 @@ class TournamentViewSet(viewsets.ModelViewSet):
         '''Update names of tournament teams given list of names'''
         tournament = self.get_object()
         names = request.data.get('names')
-        if len(names) > tournament.teams.count():
-            return Response({'error': 'Number of names must be less than number of teams'}, status=status.HTTP_400_BAD_REQUEST)
+        if len(names) != tournament.teams.count():
+            return Response({'error': 'Number of names must equal to the number of teams'}, status=status.HTTP_400_BAD_REQUEST)
         populate_teams(names, tournament)
         return Response({'message': 'Names updated successfully'})
 
