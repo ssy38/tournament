@@ -10,7 +10,8 @@ async function getData() {
 export default async function Home() {
     const data = await getData()
 
-    return <div><ul>
+    return <div>
+      <ul>
       {data.map((tournament) =>
         <li key="tournament.id"><Link href={`/tournaments/${tournament.id}`}>{tournament.name}</Link></li>
       )}
