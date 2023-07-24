@@ -3,5 +3,5 @@
 @tailwind utilities;
 
 :root {
-  @apply bg-slate-800 text-slate-200
+  @apply bg-slate-900 text-slate-100
 }

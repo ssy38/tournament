@@ -1,6 +1,7 @@
-'use client'
 
-import { notFound, redirect, useRouter } from "next/navigation"
+
+import { notFound } from "next/navigation"
+import BracketView from "./BracketView"
 
 async function getData(id) {
     const res = await fetch(`http://127.0.0.1:8000/api/tournaments/${id}/`, { cache: 'no-store' })
@@ -15,7 +16,8 @@ export default async function Page({params}) {
   if (!data) {
     notFound()
   }
-  return <div>
+  return <>
+    <div classname="block">
     <div>
       Name: {data.name}
     </div>
@@ -30,10 +32,12 @@ export default async function Page({params}) {
     <div>
     <label htmlFor="teamsField">Number of teams:</label>
       <input type="number" id="teamsField"></input>
-      <button type="submit" onClick={() => generate(data.id, document.getElementById('teamsField').value)}>Generate Bracket</button>
+      {/*<button type="submit" onClick={() => generate(data.id, document.getElementById('teamsField').value)}>Generate Bracket</button>*/}
     </div>
     Raw:
     {JSON.stringify(data)}</div>
+    <BracketView bracket={data}/>
+    </>
 }
 
 // Sends post request to generate bracket
