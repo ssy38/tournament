@@ -37,6 +37,10 @@ export default async function Page({params}) {
     Raw:
     {JSON.stringify(data)}</div>
     <BracketView bracket={data}/>
+    <div className="flex w-16 max-w-16 flex-wrap bg-black">
+      <div>asdf</div>
+      <div>asdf</div>
+    </div>
     </>
 }
 
