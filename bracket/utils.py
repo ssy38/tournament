@@ -11,7 +11,7 @@ def generate_bracket(n, tournament, *args, **kwargs):
         higher_seed = 1
         current_round = num_rounds
         next_match = None
-        higher_team = Team.objects.create(seed=1, tournament=tournament)
+        higher_team = Team.objects.create(seed=1, tournament=tournament, name="Team 1")
         next_team = None
     else:
         higher_seed = args[0]
@@ -26,7 +26,7 @@ def generate_bracket(n, tournament, *args, **kwargs):
     lower_seed = seed_sum - higher_seed
 
     # Create lower seeded team
-    lower_team = Team.objects.create(seed=lower_seed, tournament=tournament)
+    lower_team = Team.objects.create(seed=lower_seed, tournament=tournament, name = "Team " + str(lower_seed))
     
     # Check if current match is a starting match
     if current_round == 1:
@@ -34,16 +34,16 @@ def generate_bracket(n, tournament, *args, **kwargs):
         extra_matches = n - base_matches
         # If current match has a bye team, then create current match, then create extra match
         if extra_matches > 0 and lower_seed in range(base_matches - extra_matches + 1, base_matches + 1):
-            match = Match.objects.create(tournament=tournament, team1=higher_team, round=current_round, next=next_match)
-            extra_team = Team.objects.create(seed=2*n-lower_seed+1, tournament=tournament)
-            Match.objects.create(tournament=tournament, team1=lower_team, team2=extra_team, round=0, next=match)
+            match = Match.objects.create(tournament=tournament, team1=higher_team, round=current_round, next=next_match, next_team=next_team, expected_seed = higher_seed)
+            extra_team = Team.objects.create(seed=2*base_matches-lower_seed+1, tournament=tournament, name = "Team " + str(2*base_matches-lower_seed+1))
+            Match.objects.create(tournament=tournament, team1=lower_team, team2=extra_team, round=0, next=match, next_team = "team2", expected_seed = lower_seed)
             return
         # Otherwise, create current match with starting teams
-        match = Match.objects.create(tournament=tournament, team1=higher_team, team2=lower_team, round=current_round, next=next_match)
+        match = Match.objects.create(tournament=tournament, team1=higher_team, team2=lower_team, round=current_round, next=next_match, next_team=next_team, expected_seed=higher_seed)
         return
     
     # If not starting match, then create placeholder match without teams in them
-    match = Match.objects.create(tournament=tournament, round=current_round, next=next_match, next_team=next_team)
+    match = Match.objects.create(tournament=tournament, round=current_round, next=next_match, next_team=next_team, expected_seed = higher_seed)
 
     # Recursion
     generate_bracket(n, tournament, higher_seed, current_round - 1, num_rounds, match, higher_team, "team1")

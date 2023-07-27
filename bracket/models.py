@@ -13,8 +13,6 @@ class Tournament(models.Model):
         choices=formats.choices,
         default=formats.SINGLE
     )
-    startDate = models.DateField()
-    endDate = models.DateField()
 
 
 class Team(models.Model):
@@ -31,6 +29,7 @@ class Match(models.Model):
     winner = models.ForeignKey(Team, related_name="winnerMatches", on_delete=models.SET_NULL, null=True, blank=True)
     next = models.ForeignKey('self', related_name="previousMatches", on_delete=models.SET_NULL, null=True, blank=True)
     next_team = models.CharField(max_length=5, null=True, blank=True)
+    expected_seed = models.SmallIntegerField(null = True, blank = True)
 
 
 class Player(models.Model):

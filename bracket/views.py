@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from .forms import TournamentForm
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -11,21 +10,6 @@ from .utils import generate_bracket, populate_teams, advance_team
 # Create your views here.
 
 
-def index(request):
-    return render(request, "bracket/index.html")
-
-def create(request):
-    if request.method == "POST":
-        form = TournamentForm(request.POST)
-        if form.is_valid():
-            pass
-    else:
-        return render(request, "bracket/create.html", {
-            "form": TournamentForm(),
-        })
-
-def tournament(request):
-    return render(request, "bracket/tournaments.html")
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -49,13 +33,21 @@ class TeamViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows teams to be viewed or edited.
     """
-    queryset = Team.objects.all()
+    queryset = Team.objects.all().order_by('seed')
     serializer_class = TeamSerializer
 
 
 class TournamentViewSet(viewsets.ModelViewSet):
     serializer_class = TournamentSerializer
     queryset = Tournament.objects.all()
+
+    @action(detail=False, methods=['post'], url_path="create", url_name="create")
+    def create_bracket(self, request, pk=None):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     @action(detail=True, methods=['post'])
     def generate(self, request, pk=None):

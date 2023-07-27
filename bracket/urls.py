@@ -11,7 +11,5 @@ router.register(r'matches', views.MatchViewSet, basename='match')
 router.register(r'teams', views.TeamViewSet)
 
 urlpatterns = [
-    path('', views.index, name="index"),
-    path(r'create/', views.create, name="create"),
     path(r'api/', include(router.urls))
 ]

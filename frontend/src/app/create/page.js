@@ -1,10 +1,9 @@
-import Form from "./form"
+import NameForm from "./NameForm";
 
 export default async function Home() {
-    return <div>
-    <Form/>
-    </div>
-    
-
+    return (
+        <div>
+            <NameForm />
+        </div>
+    );
 }
-
