@@ -30,14 +30,42 @@ def generate_bracket(n, tournament, *args, **kwargs):
     
     # Check if current match is a starting match
     if current_round == 1:
+
+        '''
+        n = 7
+        num_rounds = 2
+        base_matches = 4
+        extra_matches = 3
+        range(4, 5)
+        1-2
+        1-4
+        2-3
+        4-5
+        3-6
+        2-7
+        '''
+
         base_matches = 2 ** num_rounds
         extra_matches = n - base_matches
-        # If current match has a bye team, then create current match, then create extra match
-        if extra_matches > 0 and lower_seed in range(base_matches - extra_matches + 1, base_matches + 1):
-            match = Match.objects.create(tournament=tournament, team1=higher_team, round=current_round, next=next_match, next_team=next_team, expected_seed = higher_seed)
+        extra_matches_seeds = range(base_matches - extra_matches + 1, base_matches + 1)
+        # If current match has extra teams, if higher and lower team needs extra match,
+        # create current match, and two extra matches
+        if extra_matches > 0 and higher_seed in extra_matches_seeds:
+            # Create current match
+            match = Match.objects.create(tournament=tournament, round=current_round, next=next_match, next_team=next_team, expected_seed = higher_seed)
+            # Create higher team match
+            higher_extra_team = Team.objects.create(seed=2*base_matches-higher_seed+1, tournament=tournament, name= "Team " + str(2*base_matches-higher_seed+1))
+            Match.objects.create(tournament=tournament, team1=higher_team, team2=higher_extra_team, round=0, next=match, next_team = "team1", expected_seed = higher_seed)
+            # Create lower team match
             extra_team = Team.objects.create(seed=2*base_matches-lower_seed+1, tournament=tournament, name = "Team " + str(2*base_matches-lower_seed+1))
             Match.objects.create(tournament=tournament, team1=lower_team, team2=extra_team, round=0, next=match, next_team = "team2", expected_seed = lower_seed)
             return
+        # Else if current match needs single extra match, create current match and one extra match
+        elif extra_matches > 0 and lower_seed in extra_matches_seeds:
+            match = Match.objects.create(tournament=tournament, team1=higher_team, round=current_round, next=next_match, next_team=next_team, expected_seed = higher_seed)
+            extra_team = Team.objects.create(seed=2*base_matches-lower_seed+1, tournament=tournament, name = "Team " + str(2*base_matches-lower_seed+1))
+            Match.objects.create(tournament=tournament, team1=lower_team, team2=extra_team, round=0, next=match, next_team = "team2", expected_seed = lower_seed)
+
         # Otherwise, create current match with starting teams
         match = Match.objects.create(tournament=tournament, team1=higher_team, team2=lower_team, round=current_round, next=next_match, next_team=next_team, expected_seed=higher_seed)
         return
