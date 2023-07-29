@@ -21,6 +21,7 @@ export default async function Page({ params }) {
             <div className="bg-slate-950">
                 <BracketView bracket={data} />
             </div>
+            <button>SAVE</button>
 
             <div className="flex flex-col bg-slate-700">
                 <div className="">Name: {data.name}</div>
@@ -42,21 +43,5 @@ export default async function Page({ params }) {
                 {JSON.stringify(data)}
             </div>
         </div>
-    );
-}
-
-// Sends post request to generate bracket
-export async function generate(id, teams) {
-    const res = await fetch(
-        `http://127.0.0.1:8000/api/tournaments/${id}/generate/`,
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                teams: teams,
-            }),
-        }
     );
 }

@@ -9,7 +9,6 @@ class MatchSerializer(serializers.ModelSerializer):
     class Meta:
         model = Match
         fields = "__all__"
-        read_only_fields = ['tournament', 'round', 'team1', 'team2', 'next']
 
 class TeamSerializer(serializers.ModelSerializer):
     class Meta:
@@ -20,6 +19,24 @@ class TournamentSerializer(serializers.ModelSerializer):
     winner = serializers.SerializerMethodField()
     matches = MatchSerializer(many=True, read_only=True)
     teams = TeamSerializer(many=True, read_only=True)
+
+    def update(self, instance, validated_data):
+        matches_data = self.context['request'].data.get('matches', None)
+        validated_data.pop('matches', None)
+        instance = super().update(instance, validated_data)
+
+        if matches_data is not None:
+            for match_data in matches_data:
+                match_id = match_data.get('id')
+                print(match_id)
+                if match_id:
+                    # If match_id exists, update the existing match
+                    match_instance = Match.objects.get(id=match_id)
+                    match_serializer = MatchSerializer(instance=match_instance, data=match_data, partial=True)
+                    if match_serializer.is_valid():
+                        print('saved')
+                        match_serializer.save()
+        return instance
 
     def get_winner(self, obj):
         try:
@@ -34,6 +51,8 @@ class TournamentSerializer(serializers.ModelSerializer):
         model = Tournament
         fields = "__all__"
 
+
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -44,7 +63,3 @@ class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = ['url', 'name']
-
-class BracketSerializer(serializers.ModelSerializer):
-    class Meta:
-        fields = ['tournament', 'matches']

@@ -75,7 +75,6 @@ class MatchViewSet(viewsets.ModelViewSet):
     """
     queryset = Match.objects.all()
     serializer_class = MatchSerializer
-    http_method_names = ['get', 'patch']
 
     # Update winner on patch call
     def partial_update(self, request, *args, **kwargs):

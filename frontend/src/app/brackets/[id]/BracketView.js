@@ -47,6 +47,7 @@ const seedOrder = {
 
 export default function BracketView(props) {
     const bracket = props.bracket;
+    const id = bracket.id;
     const matches = bracket.matches;
     const teams = bracket.teams;
     const numTeams = teams.length;
@@ -91,15 +92,31 @@ export default function BracketView(props) {
         return bracketArray;
     }
 
+    async function save() {
+        console.log(JSON.stringify({ matches: winners }));
+        const res = await fetch(
+            `http://127.0.0.1:8000/api/tournaments/${id}/`,
+            {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ matches: winners }),
+            }
+        );
+        return res.json();
+    }
+
     return (
-        <div className="flex-col px-12 py-10 flex-shrink h-[80vh] w-screen overflow-scroll">
-            <div
-                style={{ height: height + "px", width: width + "px" }}
-                className={`flex pr-8 border-2 rounded-lg flex-row`}
-            >
-                {createBracket()}
+        <>
+            <div className="flex-col px-12 py-10 flex-shrink h-[80vh] w-screen overflow-scroll">
+                <div
+                    style={{ height: height + "px", width: width + "px" }}
+                    className={`flex pr-8 border-2 rounded-lg flex-row`}
+                >
+                    {createBracket()}
+                </div>
             </div>
-        </div>
+            <button onClick={() => save()}>SUBMIT</button>
+        </>
     );
 
     function ColumnGroup({ round, teams, matches, extraMatches = 0 }) {
@@ -178,6 +195,7 @@ export default function BracketView(props) {
                 }
                 nextMatch[nextTeam] = winner;
             }
+            save();
             setWinners(winnersCopy);
         }
         return (
