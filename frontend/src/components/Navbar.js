@@ -12,7 +12,7 @@ export function NavLink({ href, label, active }) {
                 href={href}
                 className={`group block relative rounded-lg p-2 ${
                     isActive && "text-sky-400"
-                } hover:text-sky-400`}
+                } hover:text-sky-400 transition ease-in-out hover:scale-105 duration-500`}
             >
                 <span
                     className={`hidden ${
@@ -27,7 +27,7 @@ export function NavLink({ href, label, active }) {
 
 export function NavButton({ label }) {
     return (
-        <button className="flex items-center justify-center bg-sky-600 rounded-xl px-7 py-2 text-sm font-medium w-fit">
+        <button className="flex items-center justify-center bg-sky-600 rounded-xl px-7 py-2 text-sm font-medium w-fit transition ease-in-out hover:bg-sky-700 hover:scale-105 duration-500">
             {label}
         </button>
     );
