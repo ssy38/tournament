@@ -7,7 +7,7 @@ class Tournament(models.Model):
     class formats(models.TextChoices):
         SINGLE = "SINGLE", "Single Elimination"
 
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=50)
     winner = models.IntegerField(null=True, blank=True)
     format = models.CharField(
         max_length=100,
