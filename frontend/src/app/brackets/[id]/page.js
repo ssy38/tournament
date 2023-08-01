@@ -18,31 +18,35 @@ export default async function Page({ params }) {
         notFound();
     }
     return (
-        <div className="">
-            <div className="bg-slate-950">
-                <Title name={data.name} id={data.id} teams={data.teams} />
-                <BracketView bracket={data} />
-            </div>
-
-            <div className="flex flex-col bg-slate-700">
-                <div className="">Name: {data.name}</div>
-                Teams:
-                <ul>
-                    {data.teams.map((team) => (
-                        <li key={team.id}>
-                            {team.name === "" ? "Team " + team.id : team.name}
-                        </li>
-                    ))}
-                </ul>
-                Matches:
-                <div>{JSON.stringify(data.matches)}</div>
-                <div>
-                    <label htmlFor="teamsField">Number of teams:</label>
-                    <input type="number" id="teamsField"></input>
+        <>
+            <div className="">
+                <div className="bg-slate-950">
+                    <Title name={data.name} id={data.id} teams={data.teams} />
+                    <BracketView bracket={data} />
                 </div>
-                Raw:
-                {JSON.stringify(data)}
             </div>
-        </div>
+        </>
     );
 }
+
+/*                <div className="flex flex-col bg-slate-700">
+                    <div className="">Name: {data.name}</div>
+                    Teams:
+                    <ul>
+                        {data.teams.map((team) => (
+                            <li key={team.id}>
+                                {team.name === ""
+                                    ? "Team " + team.id
+                                    : team.name}
+                            </li>
+                        ))}
+                    </ul>
+                    Matches:
+                    <div>{JSON.stringify(data.matches)}</div>
+                    <div>
+                        <label htmlFor="teamsField">Number of teams:</label>
+                        <input type="number" id="teamsField"></input>
+                    </div>
+                    Raw:
+                    {JSON.stringify(data)}
+                </div> */
