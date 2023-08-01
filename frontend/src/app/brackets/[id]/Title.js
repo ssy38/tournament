@@ -43,7 +43,7 @@ export default function Title(props) {
                         className={`${
                             open &&
                             "border-2 border-gray-700 transition ease-in-out hover:border-gray-600 focus:scale-[102%] duration-500"
-                        } md:text-xl lg:text-2xl text-center rounded-xl my-2 w-1/2 max-w-2xl bg-transparent text-white`}
+                        } text-lg md:text-xl lg:text-2xl text-center rounded-xl my-2 w-1/2 max-w-2xl bg-transparent text-white`}
                     ></input>
                     <div className={`${open ? "" : "hidden"} mx-3`}>
                         <svg
@@ -151,7 +151,7 @@ function TeamsModalForm({ teams, onClick }) {
                         Submit
                     </button>
                 </form>
-                <hr className="border-gray-500 mx-5" />
+                <hr className="border-gray-500 mx-7" />
                 <form className="flex flex-col p-4 justify-center ">
                     <label className="text-center">
                         Or provide a list of teams separated by new lines:

@@ -118,7 +118,7 @@ export default function BracketView(props) {
 
     return (
         <>
-            <div className="flex-col px-12 py-10 flex-shrink h-[calc(100vh-140px)] w-screen overflow-scroll">
+            <div className="lg:flex lg:justify-center px-12 py-10 flex-shrink h-[calc(100vh-140px)] w-screen overflow-scroll">
                 <div
                     style={{ height: height + "px", width: width + "px" }}
                     className={`flex pr-8 rounded-lg flex-row`}
