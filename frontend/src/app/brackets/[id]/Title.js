@@ -43,11 +43,12 @@ export default function Title(props) {
                         maxLength={50}
                         minLength={1}
                         className={`${
-                            open &&
-                            "border-2 border-gray-700 transition ease-in-out hover:border-gray-600 focus:scale-[102%] duration-500"
-                        } text-lg md:text-xl lg:text-2xl text-center rounded-xl my-2 w-1/2 max-w-2xl bg-transparent text-white`}
+                            open
+                                ? "border-2 border-gray-700 transition ease-in-out hover:border-gray-600 focus:scale-[102%] duration-500"
+                                : "font-bold text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-400 to-white"
+                        } text-xl md:text-2xl lg:text-4xl text-center rounded-xl my-2 w-4/5 max-w-5xl bg-transparent tracking-tight`}
                     ></input>
-                    <div className={`${open ? "" : "hidden"} mx-3`}>
+                    <div className={`${open ? "" : "hidden"} mx-2`}>
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
@@ -64,7 +65,7 @@ export default function Title(props) {
                         </svg>
                     </div>
                 </div>
-                <div className="absolute flex flex-row right-0 top-2">
+                <div className="absolute flex flex-row right-0 top-3">
                     <div
                         onClick={() => setOpen(!open)}
                         className="mr-7 w-10 p-1.5 cursor-pointer transition ease-in-out duration-300 hover:bg-gray-800 rounded-full"

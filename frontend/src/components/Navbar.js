@@ -43,7 +43,7 @@ export default function Navbar() {
                     <div className="flex">
                         <Link href="/" className="flex items-center mr-8">
                             <img src="/logo.svg" className="mr-4 h-10"></img>
-                            <span className="text-2xl font-">
+                            <span className="text-2xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-50 to-blue-500">
                                 Bracket Maker
                             </span>
                         </Link>

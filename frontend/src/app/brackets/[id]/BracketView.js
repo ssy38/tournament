@@ -132,14 +132,16 @@ export default function BracketView(props) {
                                 } absolute flex right-0 items-center 
                      rounded-xl border-2 w-[80%] h-24 text-lg transform -translate-y-1/2`}
                             >
-                                <div className="flex flex-shrink-0 h-full items-center min-w-max w-[20%] text-slate-400 justify-center border-r-2">
-                                    {teams.find(
-                                        (team) => team.id === winner_id
-                                    ) !== undefined &&
-                                        teams.find(
-                                            (team) => team.id === winner_id
-                                        ).seed}
-                                </div>
+                                {teams.find((team) => team.id === winner_id) !==
+                                    undefined && (
+                                    <div className="flex flex-shrink-0 h-full items-center min-w-max w-[20%] text-slate-400 justify-center border-r-2">
+                                        {
+                                            teams.find(
+                                                (team) => team.id === winner_id
+                                            ).seed
+                                        }
+                                    </div>
+                                )}
                                 <div className="line-clamp-2 px-2">
                                     {teams.find(
                                         (team) => team.id === winner_id
@@ -225,9 +227,15 @@ export default function BracketView(props) {
                 return;
             const nextTeam = winnerMatch.next_team;
             if (nextTeam === null) {
-                winnerMatch.winner = winner;
-                winner_id = winner;
-                bracket.winner = winner_id;
+                if (winnerMatch.winner === winner) {
+                    winnerMatch.winner = null;
+                    winner_id = null;
+                    bracket.winner = null;
+                } else {
+                    winnerMatch.winner = winner;
+                    winner_id = winner;
+                    bracket.winner = winner_id;
+                }
             } else {
                 winner_id = null;
                 bracket.winner = null;
@@ -266,13 +274,14 @@ export default function BracketView(props) {
             >
                 <div
                     onClick={() => setWinner(team1)}
-                    className={`absolute flex cursor-pointer top-0 items-center ${
+                    className={`absolute flex top-0 items-center ${
                         team1 == undefined
                             ? "bg-slate-900"
-                            : team1.id == match.winner
-                            ? "bg-blue-500"
-                            : "bg-blue-950"
-                    } rounded-xl border-2 w-[80%] h-16 text-lg transform -translate-y-1/2`}
+                            : (team1.id == match.winner
+                                  ? "bg-blue-500 hover:bg-gray-700"
+                                  : "bg-blue-950 hover:bg-blue-600") +
+                              " hover:scale-[102%] active:scale-100 cursor-pointer"
+                    } rounded-xl border-2 w-[80%] h-16 text-lg transform -translate-y-1/2 transition-all`}
                 >
                     {team1 !== undefined && (
                         <div className="flex flex-shrink-0 h-full items-center min-w-max w-[15%] text-slate-400 justify-center border-r-2">
@@ -284,13 +293,14 @@ export default function BracketView(props) {
 
                 <div
                     onClick={() => setWinner(team2)}
-                    className={`absolute flex bottom-0 cursor-pointer items-center ${
+                    className={`absolute flex bottom-0 items-center ${
                         team2 == undefined
                             ? "bg-slate-900"
-                            : team2.id == match.winner
-                            ? "bg-blue-500"
-                            : "bg-blue-950"
-                    } rounded-xl border-2 w-[80%] h-16 text-lg transform translate-y-1/2`}
+                            : (team2.id == match.winner
+                                  ? "bg-blue-500 hover:bg-gray-700"
+                                  : "bg-blue-950 hover:bg-blue-600") +
+                              " hover:scale-[102%] active:scale-100 cursor-pointer"
+                    } rounded-xl border-2 w-[80%] h-16 text-lg transform translate-y-1/2 transition-all`}
                 >
                     {team2 !== undefined && (
                         <div className="flex flex-shrink-0 h-full items-center min-w-max w-[15%] text-slate-400 justify-center border-r-2">
