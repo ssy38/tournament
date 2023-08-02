@@ -78,10 +78,14 @@ def generate_bracket(n, tournament, *args, **kwargs):
     generate_bracket(n, tournament, lower_seed, current_round - 1, num_rounds, match, lower_team, "team2")
 
 def populate_teams(names, tournament):
-    '''Sets names of teams from lowest to highest seed given list of strings.'''
+    '''Sets names of teams from lowest to highest seed given list of strings.
+    Empty strings will be replaced with "Team [seed]"'''
     teams = tournament.teams.order_by('seed')
     for team, name in zip(teams, names):
-        team.name = name
+        if name == "":
+            team.name = "Team " + str(team.seed)
+        else:
+            team.name = name
         team.save()
 
 def advance_team(match):

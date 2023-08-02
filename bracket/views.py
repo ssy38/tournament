@@ -55,7 +55,22 @@ class TournamentViewSet(viewsets.ModelViewSet):
         tournament.matches.all().delete()
         tournament.teams.all().delete()
         num_teams = int(request.data.get('teams'))
+        if num_teams < 2 or num_teams > 32:
+            return Response({'error': 'Number of teams must be between 2 and 32'}, status=status.HTTP_BAD_REQUEST)
         generate_bracket(num_teams, tournament)
+        return Response({'message': 'Bracket generated successfully'})
+    
+    @action(detail=True, methods=['post'], url_path="generate-teams", url_name="generate-teams")
+    def generate_teams(self, request, pk=None):
+        tournament = self.get_object()
+        tournament.matches.all().delete()
+        tournament.teams.all().delete()
+        teams = request.data.get('teams')
+        num_teams = len(teams)
+        if num_teams < 2 or num_teams > 32:
+            return Response({'error': 'Number of teams must be between 2 and 32'}, status=status.HTTP_BAD_REQUEST)
+        generate_bracket(num_teams, tournament)
+        populate_teams(teams, tournament)
         return Response({'message': 'Bracket generated successfully'})
     
     @action(detail=True, methods=['post'], url_path="update-names", url_name="update-names")

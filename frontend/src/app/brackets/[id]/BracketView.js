@@ -64,7 +64,6 @@ export default function BracketView(props) {
     const width = 1000;
 
     let winner_id = bracket.winner;
-
     const [winners, setWinners] = useState(matches);
     // Returns array of columns
     function createBracket() {
@@ -115,7 +114,6 @@ export default function BracketView(props) {
         );
         return res.json();
     }
-
     return (
         <>
             <div className="lg:flex lg:justify-center px-12 py-10 flex-shrink h-[calc(100vh-140px)] w-screen overflow-scroll">

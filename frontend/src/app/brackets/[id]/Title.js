@@ -6,9 +6,11 @@ import { useRef } from "react";
 export default function Title(props) {
     const [open, setOpen] = useState(false);
     const [teamsOpen, setTeamsOpen] = useState(false);
+    const [teamNamesOpen, setTeamNamesOpen] = useState(false);
     const nameInput = useRef();
 
     const toggleTeamsOpen = () => setTeamsOpen(!teamsOpen);
+    const toggleTeamNamesOpen = () => setTeamNamesOpen(!teamNamesOpen);
 
     async function updateName() {
         const newName = nameInput.current.value;
@@ -90,31 +92,105 @@ export default function Title(props) {
                 </div>
                 <div
                     className={`${
-                        open ? "max-h-12 py-3" : "max-h-0 invisible p-0"
+                        open ? "h-12 py-3" : "h-0 invisible p-0"
                     } bg-slate-950 flex flex-row justify-center items-center  overflow-hidden transition-all ease-in-out duration-300`}
                 >
                     <div
                         onClick={toggleTeamsOpen}
                         className="p-2 mx-5 cursor-pointer bg-slate-700 rounded-xl hover:bg-slate-800 active:scale-[97%] transition ease-in-out duration-300"
                     >
-                        Modify number of teams
+                        Edit number of teams
                     </div>
-                    <div className="p-2 mx-5 cursor-pointer bg-slate-700 rounded-xl hover:bg-slate-800 active:scale-[97%] transition ease-in-out duration-300">
-                        Change team names
+                    <div
+                        onClick={toggleTeamNamesOpen}
+                        className="p-2 mx-5 cursor-pointer bg-slate-700 rounded-xl hover:bg-slate-800 active:scale-[97%] transition ease-in-out duration-300"
+                    >
+                        Edit team names
                     </div>
                 </div>
             </div>
 
             {teamsOpen && (
-                <TeamsModalForm teams={props.teams} onClick={toggleTeamsOpen} />
+                <TeamsModalForm
+                    teams={props.teams}
+                    onClick={toggleTeamsOpen}
+                    id={props.id}
+                />
+            )}
+
+            {teamNamesOpen && (
+                <TeamNamesModalForm
+                    teams={props.teams}
+                    onClick={toggleTeamNamesOpen}
+                    id={props.id}
+                />
             )}
         </>
     );
 }
 
-function TeamsModalForm({ teams, onClick }) {
+function TeamsModalForm({ teams, onClick, id }) {
     const teamOrdered = teams.sort((a, b) => a.seed - b.seed);
     const teamNames = teamOrdered.map((team) => team.name).join("\n");
+
+    async function generate(event) {
+        event.preventDefault();
+        const data = {
+            teams: event.target.teams.value,
+        };
+        try {
+            const res = await fetch(
+                `http://127.0.0.1:8000/api/tournaments/${id}/generate/`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(data),
+                }
+            );
+            if (!res.ok) {
+                throw new Error("Status: " + res.status);
+            }
+            window.location.reload(true);
+            onClick();
+        } catch (error) {
+            console.log(error.message);
+        }
+    }
+
+    async function generateTeams(event) {
+        event.preventDefault();
+        const teamsText = event.target.teams.value;
+        const teamNames = teamsText.split(/\r|\n/);
+        if (teamNames.length < 2 && teamNames.length > 32) {
+            return;
+        }
+
+        const data = {
+            teams: teamNames,
+        };
+        try {
+            const res = await fetch(
+                `http://127.0.0.1:8000/api/tournaments/${id}/generate-teams/`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(data),
+                }
+            );
+            if (!res.ok) {
+                throw new Error("Status: " + res.status);
+            }
+            window.location.reload(true);
+            onClick();
+        } catch (error) {
+            console.log(error.message);
+        }
+    }
+
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-60 z-40">
             <div className="relative flex flex-col bg-slate-800 w-[80vw] max-w-fit pt-4 rounded-md shadow-md shadow-slate-900">
@@ -136,12 +212,17 @@ function TeamsModalForm({ teams, onClick }) {
                         />
                     </svg>
                 </button>
-                <div className="text-center text-lg">Modify Teams</div>
-                <form className="flex flex-col justify-center p-4">
+                <div className="text-center text-lg">Edit Teams</div>
+                <form
+                    onSubmit={generate}
+                    className="flex flex-col justify-center p-4"
+                >
                     <div className="flex justify-center">
                         <label>Number of teams:</label>
                         <input
                             type="number"
+                            id="teams"
+                            name="teams"
                             min={2}
                             max={32}
                             className="bg-slate-900 rounded-lg mx-2 text-right"
@@ -152,17 +233,113 @@ function TeamsModalForm({ teams, onClick }) {
                     </button>
                 </form>
                 <hr className="border-gray-500 mx-7" />
-                <form className="flex flex-col p-4 justify-center ">
+                <form
+                    onSubmit={generateTeams}
+                    className="flex flex-col p-4 justify-center "
+                >
                     <label className="text-center">
                         Or provide a list of teams separated by new lines:
                     </label>
                     <textarea
                         type="text"
+                        id="teams"
+                        name="teams"
                         defaultValue={teamNames}
                         rows={10}
                         cols={50}
                         className="mt-4 pl-2 py-2 bg-slate-900 rounded-lg mx-2"
                     ></textarea>
+                    <button className="text-sm px-2 py-1 mt-3 rounded-xl w-fit self-center bg-sky-600">
+                        Submit
+                    </button>
+                </form>
+            </div>
+        </div>
+    );
+}
+
+function TeamNamesModalForm({ teams, onClick, id }) {
+    const [error, setError] = useState();
+    const numTeams = teams.length;
+    const teamOrdered = teams.sort((a, b) => a.seed - b.seed);
+    const teamNames = teamOrdered.map((team) => team.name).join("\n");
+
+    async function updateNames(event) {
+        event.preventDefault();
+        const teamsText = event.target.teams.value;
+        const teamNames = teamsText.split(/\r|\n/);
+        if (teamNames.length !== numTeams) {
+            setError("Number of teams must stay the same");
+            return;
+        }
+        setError(false);
+
+        const data = {
+            names: teamNames,
+        };
+        try {
+            const res = await fetch(
+                `http://127.0.0.1:8000/api/tournaments/${id}/update-names/`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(data),
+                }
+            );
+            if (!res.ok) {
+                setError(res.statusText);
+                throw new Error("Status: " + res.status);
+            }
+            window.location.reload(true);
+            onClick();
+        } catch (error) {
+            console.log(error.message);
+        }
+    }
+
+    return (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-60 z-40">
+            <div className="relative flex flex-col bg-slate-800 w-[80vw] max-w-lg pt-4 rounded-md shadow-md shadow-slate-900">
+                <button
+                    onClick={onClick}
+                    className="absolute top-0 right-0 m-2 stroke-slate-400 hover:stroke-slate-500 transition ease-in-out"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        className="w-6 h-6"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M6 18L18 6M6 6l12 12"
+                        />
+                    </svg>
+                </button>
+                <div className="text-center text-lg">Change Team Names</div>
+                <form
+                    onSubmit={updateNames}
+                    className="flex flex-col p-4 max-w-fit justify-center "
+                >
+                    <label className="text-center">Edit team names:</label>
+                    <textarea
+                        type="text"
+                        id="teams"
+                        name="teams"
+                        defaultValue={teamNames}
+                        rows={teams.length}
+                        cols={50}
+                        className="resize-none mt-4 pl-2 py-2 bg-slate-900 rounded-lg mx-2"
+                    ></textarea>
+                    {error !== false && (
+                        <span className="flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1">
+                            {error}
+                        </span>
+                    )}
                     <button className="text-sm px-2 py-1 mt-3 rounded-xl w-fit self-center bg-sky-600">
                         Submit
                     </button>
