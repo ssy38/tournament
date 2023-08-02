@@ -38,7 +38,11 @@ export default function Title(props) {
                         disabled={!open}
                         ref={nameInput}
                         defaultValue={props.name}
-                        onKeyDown={(e) => e.key === "Enter" && updateName()}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                                e.target.blur();
+                            }
+                        }}
                         onBlur={updateName}
                         maxLength={50}
                         minLength={1}

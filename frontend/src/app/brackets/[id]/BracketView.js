@@ -50,7 +50,7 @@ const heightVals = {
     4: 500,
     8: 800,
     16: 1500,
-    32: 2500,
+    32: 2800,
 };
 
 export default function BracketView(props) {
@@ -61,7 +61,6 @@ export default function BracketView(props) {
     const numTeams = teams.length;
     const numRounds = Math.ceil(Math.log2(numTeams));
     const height = heightVals[2 ** numRounds];
-    const width = 1000;
 
     let winner_id = bracket.winner;
     const [winners, setWinners] = useState(matches);
@@ -116,10 +115,10 @@ export default function BracketView(props) {
     }
     return (
         <>
-            <div className="lg:flex lg:justify-center px-12 py-10 flex-shrink h-[calc(100vh-140px)] w-screen overflow-scroll">
+            <div className="xl:flex xl:justify-center px-12 py-10 flex-shrink h-[calc(100vh-140px)] w-screen overflow-scroll">
                 <div
-                    style={{ height: height + "px", width: width + "px" }}
-                    className={`flex pr-8 rounded-lg flex-row`}
+                    style={{ height: height + "px" }}
+                    className={`flex pr-8 rounded-lg flex-row w-[80rem] xl:w-screen`}
                 >
                     {createBracket()}
                     <div className="inline-flex flex-col justify-around align-middle w-full">
@@ -142,7 +141,7 @@ export default function BracketView(props) {
                                         }
                                     </div>
                                 )}
-                                <div className="line-clamp-2 px-2">
+                                <div className="line-clamp-3 px-2">
                                     {teams.find(
                                         (team) => team.id === winner_id
                                     ) !== undefined &&
@@ -281,14 +280,16 @@ export default function BracketView(props) {
                                   ? "bg-blue-500 hover:bg-gray-700"
                                   : "bg-blue-950 hover:bg-blue-600") +
                               " hover:scale-[102%] active:scale-100 cursor-pointer"
-                    } rounded-xl border-2 w-[80%] h-16 text-lg transform -translate-y-1/2 transition-all`}
+                    } rounded-xl border-2 w-[80%] h-20 text-lg transform -translate-y-1/2 transition-all`}
                 >
                     {team1 !== undefined && (
-                        <div className="flex flex-shrink-0 h-full items-center min-w-max w-[15%] text-slate-400 justify-center border-r-2">
+                        <div className="flex flex-shrink-0 text-sm h-full items-center min-w-max w-[15%] text-slate-400 justify-center border-r-2">
                             {team1.seed}
                         </div>
                     )}
-                    <div className="line-clamp-2 px-2">{team1Name}</div>
+                    <div className="text-md line-clamp-3 px-2 leading-snug">
+                        {team1Name}
+                    </div>
                 </div>
 
                 <div
@@ -300,14 +301,16 @@ export default function BracketView(props) {
                                   ? "bg-blue-500 hover:bg-gray-700"
                                   : "bg-blue-950 hover:bg-blue-600") +
                               " hover:scale-[102%] active:scale-100 cursor-pointer"
-                    } rounded-xl border-2 w-[80%] h-16 text-lg transform translate-y-1/2 transition-all`}
+                    } rounded-xl border-2 w-[80%] h-20 text-lg transform translate-y-1/2 transition-all`}
                 >
                     {team2 !== undefined && (
-                        <div className="flex flex-shrink-0 h-full items-center min-w-max w-[15%] text-slate-400 justify-center border-r-2">
+                        <div className="flex flex-shrink-0 text-sm h-full items-center min-w-max w-[15%] text-slate-400 justify-center border-r-2">
                             {team2.seed}
                         </div>
                     )}
-                    <div className="line-clamp-2 px-2">{team2Name}</div>
+                    <div className="text-md line-clamp-3 px-2 leading-snug">
+                        {team2Name}
+                    </div>
                 </div>
             </div>
         );
