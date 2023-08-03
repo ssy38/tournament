@@ -9,12 +9,12 @@ export default function Hero(props) {
             </h1>
             <div className="flex flex-wrap justify-evenly p-3">
                 <Link href="/create">
-                    <Button text="Get started"></Button>
+                    <Button text="Create"></Button>
                 </Link>
-
-                <Button text="Docs"></Button>
+                <Link href="/brackets">
+                    <Button text="My brackets"></Button>
+                </Link>
             </div>
-            <div></div>
         </div>
     );
 }
