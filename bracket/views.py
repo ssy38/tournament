@@ -42,12 +42,48 @@ class TournamentViewSet(viewsets.ModelViewSet):
     queryset = Tournament.objects.all()
 
     @action(detail=False, methods=['post'], url_path="create", url_name="create")
-    def create_bracket(self, request, pk=None):
+    def create_empty_bracket(self, request, pk=None):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+    
+    @action(detail=False, methods=['post'], url_path="create-bracket", url_name="create-bracket")
+    def create_bracket(self, request, pk=None):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        
+        try:
+            num_teams = int(request.data.get('teams'))
+            if num_teams < 2 or num_teams > 32:
+                return Response({'error': 'Number of teams must be between 2 and 32'}, status=status.HTTP_400_BAD_REQUEST)
+            object = serializer.save()
+            generate_bracket(num_teams, object)
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        except:
+            return Response({'error': 'Error creating bracket'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+    
+    @action(detail=False, methods=['post'], url_path="create-teams", url_name="create-teams")
+    def create_teams(self, request, pk=None):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        
+        try:
+            teams = request.data.get('teams')
+            num_teams = len(teams)
+            if num_teams < 2 or num_teams > 32:
+                return Response({'error': 'Number of teams must be between 2 and 32'}, status=status.HTTP_400_BAD_REQUEST)
+            object = serializer.save()
+            generate_bracket(num_teams, object)
+            populate_teams(teams, object)
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        except:
+            return Response({'error': 'Error creating bracket'}, status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=True, methods=['post'])
     def generate(self, request, pk=None):

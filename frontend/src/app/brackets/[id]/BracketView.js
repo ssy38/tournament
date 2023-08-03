@@ -54,6 +54,13 @@ const heightVals = {
 };
 
 export default function BracketView(props) {
+    const widthVals = {
+        2: "w-[40rem]",
+        4: "w-[60rem]",
+        8: "w-[80rem]",
+        16: "w-[100rem]",
+        32: "w-[120rem]",
+    };
     const bracket = props.bracket;
     const id = bracket.id;
     const matches = bracket.matches;
@@ -61,6 +68,7 @@ export default function BracketView(props) {
     const numTeams = teams.length;
     const numRounds = Math.ceil(Math.log2(numTeams));
     const height = heightVals[2 ** numRounds];
+    const width = widthVals[2 ** numRounds];
 
     let winner_id = bracket.winner;
     const [winners, setWinners] = useState(matches);
@@ -115,15 +123,21 @@ export default function BracketView(props) {
     }
     return (
         <>
-            <div className="xl:flex xl:justify-center px-12 py-10 flex-shrink h-[calc(100vh-140px)] w-screen overflow-scroll">
+            <div
+                className={`${
+                    2 ** numRounds <= 8 && "xl:flex xl:justify-center"
+                } px-12 py-10 flex-shrink h-[calc(100vh-140px)] w-screen overflow-scroll`}
+            >
                 <div
                     style={{ height: height + "px" }}
-                    className={`flex pr-8 rounded-lg flex-row w-[80rem] xl:w-screen`}
+                    className={`flex pr-8 rounded-lg flex-row ${width} ${
+                        2 ** numRounds <= 8 && "xl:w-screen"
+                    }`}
                 >
                     {createBracket()}
                     <div className="inline-flex flex-col justify-around align-middle w-full">
                         <div
-                            className={` flex flex-col relative items-center border-white border-t-2 bg-transparent b-0`}
+                            className={`flex flex-col relative items-center border-white border-t-2 bg-transparent b-0`}
                         >
                             <div
                                 className={`${

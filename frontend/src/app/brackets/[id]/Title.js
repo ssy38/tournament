@@ -33,7 +33,7 @@ export default function Title(props) {
     return (
         <>
             <div className="relative bg-gray-900 shadow-md shadow-slate-950">
-                <div className="flex justify-center py-1 items-center">
+                <div className="flex h-16 justify-center py-1 items-center">
                     <input
                         disabled={!open}
                         ref={nameInput}
@@ -44,13 +44,13 @@ export default function Title(props) {
                             }
                         }}
                         onBlur={updateName}
-                        maxLength={50}
+                        maxLength={70}
                         minLength={1}
                         className={`${
                             open
                                 ? "border-2 border-gray-700 transition ease-in-out hover:border-gray-600 focus:scale-[102%] duration-500"
-                                : "font-bold text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-400 to-white"
-                        } text-xl md:text-2xl lg:text-4xl text-center rounded-xl my-2 w-4/5 max-w-5xl bg-transparent tracking-tight`}
+                                : "font-bold text-blue-300"
+                        } text-2xl md:text-3xl text-center rounded-xl my-2 w-4/5 max-w-5xl bg-transparent tracking-tight`}
                     ></input>
                     <div className={`${open ? "" : "hidden"} mx-2`}>
                         <svg

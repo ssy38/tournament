@@ -1,5 +1,10 @@
-import Navbar from "@/components/Navbar"
+import Navbar from "@/components/Navbar";
 
 export default function Template({ children }) {
-    return <><Navbar/>{children}</>
+    return (
+        <>
+            <Navbar />
+            {children}
+        </>
+    );
 }

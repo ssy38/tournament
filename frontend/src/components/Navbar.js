@@ -12,7 +12,7 @@ export function NavLink({ href, label, active }) {
                 href={href}
                 className={`group block relative rounded-lg p-2 ${
                     isActive && "text-sky-400"
-                } hover:text-sky-400 transition ease-in-out hover:scale-105 duration-500`}
+                } hover:text-sky-400 transition ease-in-out hover:scale-[103%] duration-500`}
             >
                 <span
                     className={`hidden ${
@@ -43,7 +43,7 @@ export default function Navbar() {
                     <div className="flex">
                         <Link href="/" className="flex items-center mr-8">
                             <img src="/logo.svg" className="mr-4 h-10"></img>
-                            <span className="text-2xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-50 to-blue-500">
+                            <span className="text-2xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-50 to-blue-400">
                                 Bracket Maker
                             </span>
                         </Link>
@@ -53,9 +53,22 @@ export default function Navbar() {
                     </div>
                     <button
                         onClick={() => setOpen((a) => !a)}
-                        className="flex items-center md:hidden px-3 h-10 rounded-lg focus:ring-2 focus:ring-slate-700 focus:ring-inset focus:bg-slate-800 hover:bg-slate-800"
+                        className="flex items-center md:hidden p-1 rounded-lg focus:ring-2 focus:ring-slate-700 focus:ring-inset focus:bg-slate-800 hover:bg-slate-800"
                     >
-                        V
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth={1.5}
+                            stroke="currentColor"
+                            className="w-6 h-6"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+                            />
+                        </svg>
                     </button>
                     <div
                         className={`${

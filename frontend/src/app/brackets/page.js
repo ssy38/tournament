@@ -13,6 +13,7 @@ export default async function Home() {
 
     return (
         <div>
+            <h1 className="text-center p-6 text-4xl font-bold">My brackets</h1>
             <ul>
                 {data.map((tournament) => (
                     <li key={tournament.id}>
