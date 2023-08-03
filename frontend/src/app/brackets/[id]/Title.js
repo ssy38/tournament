@@ -143,6 +143,9 @@ function TeamsModalForm({ teams, onClick, id }) {
         const data = {
             teams: event.target.teams.value,
         };
+        if (!(teams >= 2 && teams <= 32)) {
+            return;
+        }
         try {
             const res = await fetch(
                 `http://127.0.0.1:8000/api/tournaments/${id}/generate/`,
@@ -168,7 +171,7 @@ function TeamsModalForm({ teams, onClick, id }) {
         event.preventDefault();
         const teamsText = event.target.teams.value;
         const teamNames = teamsText.split(/\r|\n/);
-        if (teamNames.length < 2 && teamNames.length > 32) {
+        if (teamNames.length < 2 || teamNames.length > 32) {
             return;
         }
 
@@ -228,12 +231,13 @@ function TeamsModalForm({ teams, onClick, id }) {
                             type="number"
                             id="teams"
                             name="teams"
+                            required={true}
                             min={2}
                             max={32}
                             className="bg-slate-900 rounded-lg mx-2 text-right"
                         ></input>
                     </div>
-                    <button className="text-sm px-2 py-1 mt-3 rounded-xl w-fit self-center bg-sky-600 shrink-0">
+                    <button className="text-sm px-3 py-1 mt-3 rounded-lg w-fit self-center bg-slate-300 text-slate-950 hover:bg-slate-400 transition-colors">
                         Submit
                     </button>
                 </form>
@@ -249,12 +253,13 @@ function TeamsModalForm({ teams, onClick, id }) {
                         type="text"
                         id="teams"
                         name="teams"
+                        required={true}
                         defaultValue={teamNames}
                         rows={10}
                         cols={50}
                         className="mt-4 pl-2 py-2 bg-slate-900 rounded-lg mx-2"
                     ></textarea>
-                    <button className="text-sm px-2 py-1 mt-3 rounded-xl w-fit self-center bg-sky-600">
+                    <button className="text-sm px-3 py-1 mt-3 rounded-lg w-fit self-center bg-slate-300 text-slate-950 hover:bg-slate-400 transition-colors">
                         Submit
                     </button>
                 </form>
