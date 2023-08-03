@@ -8,17 +8,14 @@ async function getData() {
     cache: "no-store",
   });
   if (res.ok) {
-    console.log("fetching");
     return res.json();
   } else {
-    console.log("not fetching");
     return [];
   }
 }
 
 export default async function Home() {
   const data = await getData();
-  console.log("rerendering");
   return (
     <div className="flex flex-col items-center pb-10">
       <h1 className="pb-3 pt-6 text-4xl font-bold">My brackets</h1>

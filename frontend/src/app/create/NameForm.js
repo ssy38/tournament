@@ -66,7 +66,7 @@ export default function NameForm() {
       const resData = await res.json();
       addToLocalStorage(resData.id);
       router.refresh();
-      router.push(`/brackets/${resData.id}/`);
+      router.push(`brackets/${resData.id}/`);
     } catch (error) {
       console.log(error.message);
     }
