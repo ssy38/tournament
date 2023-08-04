@@ -1,14 +1,13 @@
 from django.http import HttpResponse
-from rest_framework import viewsets
-from rest_framework.response import Response, status
+from rest_framework import viewsets, status
+from rest_framework.response import Response
 from rest_framework.decorators import action
 from .serializers import *
 from .utils import generate_bracket, populate_teams, advance_team
-from drf_spectacular.utils import extend_schema, extend_schema_field
-from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import extend_schema
 
 # Create your views here.
-def status(request):
+def statusView(request):
     return HttpResponse("Status: online")
     
 
