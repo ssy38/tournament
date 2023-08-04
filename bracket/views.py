@@ -1,5 +1,5 @@
-from django.shortcuts import render
-from rest_framework import viewsets, status
+from django.shortcuts import render, HttpResponse
+from rest_framework import viewsets, status, request
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from .serializers import *
@@ -8,7 +8,9 @@ from drf_spectacular.utils import extend_schema, extend_schema_field
 from drf_spectacular.types import OpenApiTypes
 
 # Create your views here.
-
+def status():
+    return HttpResponse("Status: online")
+    
 
 class TeamViewSet(viewsets.ModelViewSet):
     """
