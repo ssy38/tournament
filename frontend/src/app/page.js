@@ -1,11 +1,11 @@
 import Hero from "@/components/Hero";
 
 async function status() {
-    const res = await fetch("https://bracket-maker-django.onrender.com/");
+    const res = await fetch("https://bracket-maker-django.onrender.com/status/");
     if (res.status === 200) {
         return true;
     }
-    else return true;
+    else return false;
 }
 
 export default async function Page() {
