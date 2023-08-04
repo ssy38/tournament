@@ -1,6 +1,6 @@
 # Bracket Maker
 
-Demo here: [https://bracketmaker.vercel.app](url)
+Demo here: [https://bracketmaker.vercel.app]([url](https://bracketmaker.vercel.app))
 
 This is a single elimination bracket generator built with Next.js, React, Tailwind CSS, and Django.
 
