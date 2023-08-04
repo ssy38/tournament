@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import BracketView from "./BracketView";
 import Title from "./Title";
 
-export async function generateMetadata({ params, searchParams }) {
+export async function generateMetadata({ params }) {
     // read route params
     const id = params.id
    
