@@ -108,7 +108,7 @@ export default function BracketView(props) {
   }
 
   async function save() {
-    const res = await fetch(`http://127.0.0.1:8000/api/tournaments/${id}/`, {
+    const res = await fetch(`https://bracket-maker-django.onrender.com/api/tournaments/${id}/`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

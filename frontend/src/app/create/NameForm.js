@@ -51,7 +51,7 @@ export default function NameForm() {
   async function create(data, url) {
     try {
       const res = await fetch(
-        `http://127.0.0.1:8000/api/tournaments/create-${url}/`,
+        `https://bracket-maker-django.onrender.com/api/tournaments/create-${url}/`,
         {
           method: "POST",
           headers: {

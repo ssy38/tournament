@@ -7,7 +7,7 @@ export async function generateMetadata({ params }) {
     const id = params.id
    
     // fetch data
-    const tournament = await fetch(`http://127.0.0.1:8000/api/tournaments/${id}/`).then((res) => res.json())
+    const tournament = await fetch(`https://bracket-maker-django.onrender.com/api/tournaments/${id}/`).then((res) => res.json())
    
     // optionally access and extend (rather than replace) parent metadata
    
@@ -17,7 +17,7 @@ export async function generateMetadata({ params }) {
   }
 
 async function getData(id) {
-    const res = await fetch(`http://127.0.0.1:8000/api/tournaments/${id}/`, {
+    const res = await fetch(`https://bracket-maker-django.onrender.com/api/tournaments/${id}/`, {
         cache: "no-store",
     });
     if (!res.ok) {

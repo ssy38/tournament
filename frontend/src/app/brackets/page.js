@@ -5,7 +5,7 @@ export const metadata = {
 }
 
 async function getData() {
-  const res = await fetch("http://127.0.0.1:8000/api/tournaments/", {
+  const res = await fetch("https://bracket-maker-django.onrender.com/api/tournaments/", {
     cache: "no-store",
   });
   if (res.ok) {

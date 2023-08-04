@@ -18,7 +18,7 @@ export default function Title(props) {
       return;
     }
     const res = await fetch(
-      `http://127.0.0.1:8000/api/tournaments/${props.id}/`,
+      `https://bracket-maker-django.onrender.com/api/tournaments/${props.id}/`,
       {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -149,7 +149,7 @@ function TeamsModalForm({ teams, onClick, id }) {
     }
     try {
       const res = await fetch(
-        `http://127.0.0.1:8000/api/tournaments/${id}/generate/`,
+        `https://bracket-maker-django.onrender.com/api/tournaments/${id}/generate/`,
         {
           method: "POST",
           headers: {
@@ -181,7 +181,7 @@ function TeamsModalForm({ teams, onClick, id }) {
     };
     try {
       const res = await fetch(
-        `http://127.0.0.1:8000/api/tournaments/${id}/generate-teams/`,
+        `https://bracket-maker-django.onrender.com/api/tournaments/${id}/generate-teams/`,
         {
           method: "POST",
           headers: {
@@ -287,7 +287,7 @@ function TeamNamesModalForm({ teams, onClick, id }) {
     };
     try {
       const res = await fetch(
-        `http://127.0.0.1:8000/api/tournaments/${id}/update-names/`,
+        `https://bracket-maker-django.onrender.com/api/tournaments/${id}/update-names/`,
         {
           method: "POST",
           headers: {
