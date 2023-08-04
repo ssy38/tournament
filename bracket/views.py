@@ -51,6 +51,7 @@ class TournamentViewSet(viewsets.ModelViewSet):
             object = serializer.save()
             generate_bracket(num_teams, object)
             headers = self.get_success_headers(serializer.data)
+            print('Bracket created')
             return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
         except:
             return Response({'error': 'Error creating bracket'}, status=status.HTTP_400_BAD_REQUEST)
@@ -72,6 +73,7 @@ class TournamentViewSet(viewsets.ModelViewSet):
             generate_bracket(num_teams, object)
             populate_teams(teams, object)
             headers = self.get_success_headers(serializer.data)
+            print('Teams created')
             return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
         except:
             return Response({'error': 'Error creating bracket'}, status=status.HTTP_400_BAD_REQUEST)
