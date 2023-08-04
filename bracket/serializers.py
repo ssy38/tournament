@@ -9,11 +9,13 @@ class MatchSerializer(serializers.ModelSerializer):
     class Meta:
         model = Match
         fields = "__all__"
+        read_only_fields = ('round', 'next_team', 'expected_seed', 'tournament', 'next')
 
 class TeamSerializer(serializers.ModelSerializer):
     class Meta:
         model = Team
         fields = "__all__"
+        read_only_fields = ['tournament', 'seed']
 
 class TournamentSerializer(serializers.ModelSerializer):
     matches = MatchSerializer(many=True, read_only=True)
@@ -44,13 +46,33 @@ class TournamentSerializer(serializers.ModelSerializer):
 
 
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = "__all__"
 
 
-class GroupSerializer(serializers.ModelSerializer):
+class CreateEmptyTournamentSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Group
-        fields = ['url', 'name']
+        model = Tournament
+        fields = ['name']
+
+class CreateTournamentSerializer(serializers.ModelSerializer):
+    teams = serializers.IntegerField(min_value=2, max_value=32)
+    class Meta:
+        model = Tournament
+        fields = ["name", "teams"]
+
+class GenerateSerializer(serializers.ModelSerializer):
+    teams = serializers.IntegerField(min_value=2, max_value=32)
+    class Meta:
+        model = Tournament
+        fields = ['teams']
+
+class CreateTeamsSerializer(serializers.ModelSerializer):
+    teams = serializers.ListField(child=serializers.CharField(max_length=100), min_length=2, max_length=32)
+    class Meta:
+        model = Tournament
+        fields = ["name", "teams"]
+
+class UpdateNamesSerializer(serializers.ModelSerializer):
+    teams = serializers.ListField(child=serializers.CharField(max_length=100), min_length=2, max_length=32)
+    class Meta:
+        model = Tournament
+        fields=['teams']

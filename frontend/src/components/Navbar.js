@@ -87,7 +87,7 @@ export default function Navbar() {
                 ></NavLink>
               </li>
               <li>
-                <NavLink href="/API" label="API" active={active}></NavLink>
+                <a target="_blank" rel="noreferrer" href="http://127.0.0.1:8000/api/schema/swagger-ui/" className="group relative block rounded-lg p-2 transition duration-500 ease-in-out hover:scale-[103%] hover:text-sky-400 active:scale-100">Docs</a>
               </li>
             </ul>
           </div>

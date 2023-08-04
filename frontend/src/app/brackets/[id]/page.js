@@ -2,6 +2,20 @@ import { notFound } from "next/navigation";
 import BracketView from "./BracketView";
 import Title from "./Title";
 
+export async function generateMetadata({ params, searchParams }) {
+    // read route params
+    const id = params.id
+   
+    // fetch data
+    const tournament = await fetch(`http://127.0.0.1:8000/api/tournaments/${id}/`).then((res) => res.json())
+   
+    // optionally access and extend (rather than replace) parent metadata
+   
+    return {
+      title: tournament.name + " - Bracket Maker",
+    }
+  }
+
 async function getData(id) {
     const res = await fetch(`http://127.0.0.1:8000/api/tournaments/${id}/`, {
         cache: "no-store",

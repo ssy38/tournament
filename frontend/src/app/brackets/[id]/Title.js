@@ -140,10 +140,11 @@ function TeamsModalForm({ teams, onClick, id }) {
 
   async function generate(event) {
     event.preventDefault();
+    const numTeams = event.target.teams.value;
     const data = {
-      teams: event.target.teams.value,
+      teams: numTeams,
     };
-    if (!(teams >= 2 && teams <= 32)) {
+    if (!(numTeams >= 2 && numTeams <= 32)) {
       return;
     }
     try {
@@ -169,7 +170,7 @@ function TeamsModalForm({ teams, onClick, id }) {
 
   async function generateTeams(event) {
     event.preventDefault();
-    const teamsText = event.target.teams.value;
+    const teamsText = event.target.teamsList.value;
     const teamNames = teamsText.split(/\r|\n/);
     if (teamNames.length < 2 || teamNames.length > 32) {
       return;
@@ -248,8 +249,8 @@ function TeamsModalForm({ teams, onClick, id }) {
           </label>
           <textarea
             type="text"
-            id="teams"
-            name="teams"
+            id="teamsList"
+            name="teamsList"
             required={true}
             defaultValue={teamNames}
             rows={10}
@@ -273,7 +274,7 @@ function TeamNamesModalForm({ teams, onClick, id }) {
 
   async function updateNames(event) {
     event.preventDefault();
-    const teamsText = event.target.teams.value;
+    const teamsText = event.target.teamsNames.value;
     const teamNames = teamsText.split(/\r|\n/);
     if (teamNames.length !== numTeams) {
       setError("Number of teams must stay the same");
@@ -335,10 +336,10 @@ function TeamNamesModalForm({ teams, onClick, id }) {
           <label className="text-center">Edit team names:</label>
           <textarea
             type="text"
-            id="teams"
-            name="teams"
+            id="teamsNames"
+            name="teamsNames"
             defaultValue={teamNames}
-            rows={teams.length}
+            rows={10}
             cols={50}
             className="mx-2 mt-4 resize-none rounded-lg bg-slate-900 py-2 pl-2"
           ></textarea>

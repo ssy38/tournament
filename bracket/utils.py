@@ -30,21 +30,6 @@ def generate_bracket(n, tournament, *args, **kwargs):
     
     # Check if current match is a starting match
     if current_round == 1:
-
-        '''
-        n = 7
-        num_rounds = 2
-        base_matches = 4
-        extra_matches = 3
-        range(4, 5)
-        1-2
-        1-4
-        2-3
-        4-5
-        3-6
-        2-7
-        '''
-
         base_matches = 2 ** num_rounds
         extra_matches = n - base_matches
         extra_matches_seeds = range(base_matches - extra_matches + 1, base_matches + 1)

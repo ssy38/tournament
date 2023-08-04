@@ -1,9 +1,0 @@
-{% extends "bracket/layout.html" %}
-
-{% block content %}
-<form action="{% url 'create' %}" method="post">
-    {% csrf_token %}
-    {{ form.as_ul }}
-    <input type="submit">
-</form>
-{% endblock %}
