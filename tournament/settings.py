@@ -61,7 +61,8 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
 ]
 
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOWED_ORIGINS = ["https://bracketmaker.vercel.app",
+                        "https://tournament-git-main-ssy38.vercel.app"]
 
 ROOT_URLCONF = 'tournament.urls'
 
