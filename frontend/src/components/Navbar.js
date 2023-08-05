@@ -27,7 +27,7 @@ export function NavLink({ href, label, active }) {
 
 export function NavButton({ label }) {
   return (
-    <button className="flex w-fit items-center justify-center rounded-xl bg-sky-600 px-7 py-2 text-sm font-medium transition duration-500 ease-in-out hover:scale-105 hover:bg-sky-700 active:scale-100">
+    <button className="flex w-fit items-center justify-center rounded-xl bg-sky-600 px-5 py-2 text-sm font-medium transition duration-500 ease-in-out hover:scale-105 hover:bg-sky-700 active:scale-100">
       {label}
     </button>
   );
@@ -41,7 +41,7 @@ export default function Navbar() {
       <nav className="sticky top-0 z-50 w-full bg-slate-900 shadow-lg">
         <div className="flex flex-wrap items-center justify-between p-4">
           <div className="flex">
-            <Link href="/" className="mr-8 flex items-center">
+            <Link href="/" className="mr-5 flex items-center">
               <img src="/logo.svg" className="mr-4 h-10"></img>
               <span className="bg-gradient-to-r from-blue-50 to-blue-400 bg-clip-text text-2xl font-bold tracking-tight text-transparent">
                 Bracket Maker
