@@ -27,7 +27,7 @@ export function NavLink({ href, label, active }) {
 
 export function NavButton({ label }) {
   return (
-    <button className="flex w-fit items-center justify-center rounded-xl bg-sky-600 px-5 py-2 text-sm font-medium transition duration-500 ease-in-out hover:scale-105 hover:bg-sky-700 active:scale-100">
+    <button className="flex w-fit items-center justify-center rounded-xl bg-sky-600 px-4 py-2 text-sm font-medium transition duration-500 ease-in-out hover:scale-105 hover:bg-sky-700 active:scale-100">
       {label}
     </button>
   );
